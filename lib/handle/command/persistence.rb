@@ -29,9 +29,13 @@ module Handle
         if save_handle == self.handle
           begin
             original = connection.resolve_handle(save_handle)
+            puts "original: #{original}"
             actions = original | self
+            puts "actions: #{actions}"
             actions.each_value { |v| v.connection = connection }
-            [:delete,:update,:add].each do |action|
+            # if the change to delete_handle_values doesn't fix the 
+            # issue removing delete here should be ok.
+            [:delete, :update,:add].each do |action|
               unless actions[action].empty?
                 connection.send("#{action}_handle_values".to_sym, save_handle, actions[action])
               end

@@ -46,7 +46,12 @@ module Handle
       end
 
       def delete_handle_values(handle, record)
-        indexes = record.collect(&:index).join(',')
+        # don't mess with HS_SITE and HS_VLIST
+        # index 1 and index 200
+        indexes = record.collect(&:index)
+puts "indexes: #{indexes}"
+        indexes = indexes.delete_if {|x| (x == "1" || x == "200" || x == "101" || x == 1 || x == 200 || x == 101) }
+        indexes = indexes.join(',')
         @batch_file.puts "\nREMOVE #{indexes}:#{handle}"
       end
 
